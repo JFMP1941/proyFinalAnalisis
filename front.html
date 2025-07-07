@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Predicción de Gravedad del Accidente</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      max-width: 600px;
+      margin: auto;
+      
+      background-color: #b7f1b0;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+    input, select, button {
+      padding: 10px;
+      margin: 6px 0 12px 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #resultado {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: green;
+      text-align: center;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Predicción de Gravedad del Accidente</h2>
+
+  <label for="Edad">Edad (0-71):</label>
+  <input type="number" id="Edad" min="0" max="71" placeholder="Ej: 28">
+
+  <label for="Min_Acc">Minutos del accidente (0-60):</label>
+  <input type="number" id="Min_Acc" min="0" max="60" placeholder="Ej: 30">
+
+  <label for="Hora_Acc">Hora del accidente (0-24):</label>
+  <input type="number" id="Hora_Acc" min="0" max="24" placeholder="Ej: 14">
+
+  <label for="DD_Mes_Acc">Día del mes (1-31):</label>
+  <input type="number" id="DD_Mes_Acc" min="1" max="31" placeholder="Ej: 22">
+
+  <label for="Localidad">Localidad:</label>
+  <select id="Localidad">
+    <option value="1">USAQUÉN</option>
+    <option value="2">CHAPINERO</option>
+    <option value="3">SANTA FE</option>
+    <option value="4">SAN CRISTÓBAL</option>
+    <option value="5">USME</option>
+    <option value="6">ANTONIO NARIÑO</option>
+    <option value="7">RAFAEL URIBE URIBE</option>
+    <option value="8">TEUSAQUILLO</option>
+    <option value="9">LOS MÁRTIRES</option>
+    <option value="10">BARRIOS UNIDOS</option>
+    <option value="11">ENGATIVÁ</option>
+    <option value="12">KENNEDY</option>
+    <option value="13">CIUDAD BOLÍVAR</option>
+    <option value="14">FONTIBÓN</option>
+    <option value="15">BOSA</option>
+    <option value="16">SUBA</option>
+    <option value="17">PUENTE ARANDA</option>
+    <option value="18">TUNJUELITO</option>
+    <option value="19">CANDELARIA</option>
+    <option value="20">SUMAPAZ</option>
+  </select>
+
+  <label for="MM_Acc">Mes del accidente:</label>
+  <select id="MM_Acc">
+    <option value="1">ENERO</option>
+    <option value="2">FEBRERO</option>
+    <option value="3">MARZO</option>
+    <option value="4">ABRIL</option>
+    <option value="5">MAYO</option>
+    <option value="6">JUNIO</option>
+    <option value="7">JULIO</option>
+    <option value="8">AGOSTO</option>
+    <option value="9">SEPTIEMBRE</option>
+    <option value="10">OCTUBRE</option>
+    <option value="11">NOVIEMBRE</option>
+    <option value="12">DICIEMBRE</option>
+  </select>
+
+  <label for="Dia_Semana_Acc">Día de la semana:</label>
+  <select id="Dia_Semana_Acc">
+    <option value="1">LUNES</option>
+    <option value="2">MARTES</option>
+    <option value="3">MIÉRCOLES</option>
+    <option value="4">JUEVES</option>
+    <option value="5">VIERNES</option>
+    <option value="6">SÁBADO</option>
+    <option value="7">DOMINGO</option>
+  </select>
+
+  <label for="Clase">Clase:</label>
+  <select id="Clase">
+    <option value="1">MOTOCICLETA</option>
+    <option value="2">AUTOMOVIL</option>
+    <option value="3">BUS</option>
+    <option value="4">CAMIONETA</option>
+    <option value="5">BICICLETA</option>
+    <option value="6">TRACTOCAMION</option>
+    <option value="7">VOLQUETA</option>
+    <option value="8">BUSETA</option>
+    <option value="9">CAMION, FURGON</option>
+    <option value="10">CUATRIMOTO</option>
+    <option value="11">CAMPERO</option>
+    <option value="12">MICROBUS</option>
+    <option value="13">MOTOCARRO</option>
+    <option value="14">M. AGRICOLA</option>
+    <option value="15">M. INDUSTRIAL</option>
+    <option value="16">MOTOTRICICLO</option>
+    <option value="17">NO IDENTIFICADO</option>
+    <option value="18">TRACCION ANIMAL</option>
+  </select>
+
+  <label for="Sexo">Sexo:</label>
+  <select id="Sexo">
+    <option value="1">MASCULINO</option>
+    <option value="2">FEMENINO</option>
+  </select>
+
+
+  <button onclick="enviar()">Predecir Gravedad</button>
+
+  <div id="resultado"></div>
+
+  <script>
+    const gravedadLabels = {
+      1: 'CON HERIDOS',
+      2: 'CON MUERTOS',
+      3: 'SOLO DAÑOS'
+    };
+
+    async function enviar() {
+      const payload = {
+        Edad:            parseInt(document.getElementById("Edad").value, 10),
+        Min_Acc:         parseInt(document.getElementById("Min_Acc").value, 10),
+        Hora_Acc:        parseInt(document.getElementById("Hora_Acc").value, 10),
+        DD_Mes_Acc:      parseInt(document.getElementById("DD_Mes_Acc").value, 10),
+        Localidad:       parseInt(document.getElementById("Localidad").value, 10),
+        MM_Acc:          parseInt(document.getElementById("MM_Acc").value, 10),
+        Dia_Semana_Acc:  parseInt(document.getElementById("Dia_Semana_Acc").value, 10),
+        Clase:           parseInt(document.getElementById("Clase").value, 10),
+        Sexo:            parseInt(document.getElementById("Sexo").value, 10)
+      };
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error("Error en la respuesta del servidor");
+        const data = await response.json();
+
+        const probsText = data.probabilidades
+          .map((p, i) => `${gravedadLabels[i+1]}: ${(p * 100).toFixed(1)}%`)
+          .join('<br>');
+
+        document.getElementById("resultado").innerHTML =
+          `Gravedad Pronosticada: <strong>${gravedadLabels[data.prediccion] || data.prediccion}</strong><br>` +
+          `Probabilidades:<br>${probsText}`;
+      } catch (error) {
+        console.error(error);
+        document.getElementById("resultado").innerHTML =
+          "<span style='color:red'>Error de conexión con el servidor.</span>";
+      }
+    }
+  </script>
+
+</body>
+</html>
