@@ -7,6 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.pipeline import Pipeline
+import os
 
 # ───────────────────────────────
 # 1. Carga y entrenamiento
@@ -86,4 +87,5 @@ def predict():
     return jsonify(prediccion=pred_class, probabilidades=pred_proba)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
